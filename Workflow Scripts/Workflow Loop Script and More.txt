@@ -1,0 +1,15 @@
+SELECT dbo.fn_ConvertFromUTC(startdate, null) AS [StartDateLocal], dbo.fn_ConvertFromUTC(completedate, null), N.workflowid
+	,s.*
+FROM dbo.WorkFlowStatus S
+left outer JOIN dbo.WorkFlowNodes N
+	ON N.id = S.workflownodeid
+--WHERE S.errors LIKE '%infin%'
+---where s.objectid = '1DD18640-91BF-4366-BDF8-4A0A49F9D447'
+WHERE S.actiontakenname = 'Infinite Loop Detected.'
+order by startdate desc
+
+
+----------Check Which Workflow Uses Specify Emails------------
+SELECT *
+FROM dbo.WorkflowCommandEmailRecipients
+where recipienttype = 4 -- 4 = sender

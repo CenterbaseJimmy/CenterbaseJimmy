@@ -1,0 +1,33 @@
+select						CONCAT(AccountNumber, ' - ', ChtDesc) [AccountName]
+							--ChtDesc [AccountName]
+							, AccountNumber [CBAccountNumber]
+							, NULL [ParentAccountName]
+							--, [ACCOUNT TYPE] [AccountType]
+							, NULL [AccountType]
+							, NULL [AccountSubType]
+							, NULL [FinancialInstitution]
+							, NULL [RoutingNumber]
+							, NULL [BankAccountNumber]
+							, NULL [NextCheckNumber]
+							, ChtDesc [Description]
+							, startingBalance [OpeningBalance]
+							, ChtFinStmtType, ChtSAFType, ChtParenCode, ChtCashFlowType
+							, ChtSysNbr
+--INTO JURIS2.COA
+FROM (
+SELECT 	 CONVERT(varchar(50), FORMAT(CONVERT(int, chtmainacct),'D4'))
+		+ CASE WHEN CONVERT(INT, COAS1Code) >= 0 THEN '-' + CONVERT(varchar(50), format(CONVERT(int, COAS1Code),'D3'))
+		  ELSE '' end AS [AccountNumber] 
+		, *  
+FROM ChartOfAccounts COA
+LEFT JOIN COASubAccount1 COAS1
+	ON COA.ChtSubAcct1=COAS1.COAS1ID
+) A
+LEFT JOIN (
+	select ChbPrdYear, cb.ChbAccount, sum(cb.chbnetchange) [startingBalance]
+	from ChartBudget cb
+
+	group by ChbAccount, ChbPrdYear
+) B
+	ON A.ChtSysNbr=B.ChbAccount
+	AND B.ChbPrdYear=2021

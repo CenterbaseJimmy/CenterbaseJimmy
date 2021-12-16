@@ -1,0 +1,8 @@
+SELECT M.MatSysNbr
+, M.[MATTER NAME]
+, BA.*
+FROM JURIS.MATTERS M
+JOIN BillCopy BC
+	ON M.MatBillTo=BC.BilCpyBillTo
+JOIN BillingAddress BA
+	ON BC.BilCpyBilAdr=BA.BilAdrSysNbr

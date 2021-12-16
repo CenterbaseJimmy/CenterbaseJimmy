@@ -1,0 +1,14 @@
+	CREATE VIEW [JURIS].SetOrigination
+		AS
+
+		SELECT MOA.MOrigMat [MatterID]
+		, U.username [OriginatorUserName]
+		, MOA.MOrigPcnt [OriginationPercent]
+		FROM MatOrigAtty MOA
+		JOIN JURIS.MATTERS	M
+			ON MOA.MOrigMat=M.MatSysNbr
+		JOIN JURIS.Users U
+			ON MOA.MOrigAtty=U.otherkey
+
+
+		GO
